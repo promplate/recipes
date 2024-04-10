@@ -1,5 +1,6 @@
 from collections import defaultdict
 from functools import partial
+from pathlib import Path
 
 from box import Box
 from promplate import Context, Template
@@ -36,3 +37,7 @@ class DotTemplate(Template):
 
     async def arender(self, context=None):
         return await super().arender(make_context(context))
+
+
+def register_components(path: Path, pattern="**/*"):
+    layers.append({i.stem: DotTemplate.read(i) for i in path.glob(pattern)})
