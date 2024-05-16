@@ -13,6 +13,12 @@ class SilentBox(Box):
     def __str__(self):
         return super().__str__() if len(self) else ""
 
+    if __debug__:
+
+        def __call__(self, *args, **kwargs):
+            print(f"{self.__class__} shouldn't be called {args = } {kwargs = }")
+            return ""
+
 
 class BuiltinsLayer(dict):
     def __getitem__(self, key):
