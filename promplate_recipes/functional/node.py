@@ -1,3 +1,4 @@
+from inspect import isgenerator
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar
 
 from promplate.chain.node import Context, Interruptable, resolve
@@ -27,7 +28,7 @@ class SimpleNode(CallableWrapper[Function], Interruptable):
 
         ret = self.__call__(context)
 
-        if "__iter__" in dir(ret):
+        if isgenerator(ret):
             for i in ret:
                 context.result = i
                 self._apply_mid_processes(context, callbacks)
@@ -44,12 +45,12 @@ class SimpleNode(CallableWrapper[Function], Interruptable):
 
         ret = await resolve(resolve(self.__call__(context)))
 
-        if "__aiter__" in dir(ret) or "__iter__" in dir(ret):
+        if "__aiter__" in dir(ret):
             async for i in ret:
                 context.result = i
                 await self._apply_async_mid_processes(context, callbacks)
                 yield
-        elif "__iter__" in dir(ret):
+        elif isgenerator(ret):
             for i in ret:
                 context.result = i
                 await self._apply_async_mid_processes(context, callbacks)
