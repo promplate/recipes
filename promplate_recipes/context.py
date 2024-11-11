@@ -1,5 +1,5 @@
 from collections import defaultdict
-from functools import cached_property, partial
+from functools import partial
 from pathlib import Path
 
 from box import Box
@@ -34,26 +34,17 @@ class BuiltinsLayer(dict):
 
 
 class ComponentsLayer(dict):
-    def __init__(self, path: str | Path, pattern="**/*"):
+    def __init__(self, path: str | Path):
         self.path = Path(path)
-        self.pattern = pattern
 
-    if __debug__:
-
-        def __getitem__(self, key: str):
-            try:
-                return DotTemplate.read(next(self.path.glob(f"**/{key}.*")))
-            except StopIteration:
-                raise KeyError(key) from None
-
-    else:
-
-        @cached_property
-        def templates(self):
-            return {i.name.split(".", 1)[0]: DotTemplate.read(i) for i in self.path.glob(self.pattern)}
-
-        def __getitem__(self, key: str):
-            return self.templates[key]
+    def __getitem__(self, key: str):
+        try:
+            template = DotTemplate.read(next(self.path.glob(f"**/{key}.*")))
+            if not __debug__:
+                self[key] = template
+            return template
+        except StopIteration:
+            raise KeyError(key) from None
 
     def __repr__(self):
         return "{ components }"
@@ -76,5 +67,5 @@ class DotTemplate(Template):
         return await super().arender(make_context(context))
 
 
-def register_components(path: str | Path, pattern="**/*"):
-    layers.append(ComponentsLayer(path, pattern))
+def register_components(path: str | Path):
+    layers.append(ComponentsLayer(path))
