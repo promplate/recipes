@@ -8,7 +8,6 @@ from promplate.prompt.template import SafeChainMapContext
 from promplate.prompt.utils import get_builtins
 
 
-@partial(partial, default_box=True)
 class SilentBox(Box):
     def __str__(self):
         return super().__str__() if len(self) else ""
@@ -18,6 +17,9 @@ class SilentBox(Box):
         def __call__(self, *args, **kwargs):
             print(f"{self.__class__} shouldn't be called {args = } {kwargs = }")
             return ""
+
+
+SilentBox = partial(SilentBox, default_box=True)  # type: ignore
 
 
 class BuiltinsLayer(dict):

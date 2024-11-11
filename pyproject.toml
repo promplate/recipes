@@ -20,6 +20,9 @@ fmt = { composite = ["ruff check --fix --exit-zero", "isort .", "black ."] }
 [tool.black]
 line-length = 120
 
+[tool.pyright]
+typeCheckingMode = "standard"
+
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
