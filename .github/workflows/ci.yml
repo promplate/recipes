@@ -1,0 +1,60 @@
+name: CI
+
+on: [push, fork, pull_request, workflow_dispatch]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - name: Install dependencies
+        run: |
+          pip install uv --disable-pip-version-check
+          uvx pdm export --pyproject | uv pip install -r - --system
+          yarn global add pyright
+      - name: Check code quality
+        run: |
+          ruff check --diff
+          isort . --check --diff
+          black . --check --diff
+      - name: Check typing
+        run: pyright
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - name: Install dependencies
+        run: pip install uv --disable-pip-version-check
+      - name: Build
+        run: uv build
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [check, build]
+    permissions:
+      id-token: write
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Publish to PyPI
+        run: |
+          pip install uv --disable-pip-version-check
+          uv publish
+        continue-on-error: true
