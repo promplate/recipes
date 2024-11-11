@@ -2,7 +2,7 @@
 name = "promplate-recipes"
 dynamic = ["version"]
 authors = [{ name = "Muspi Merol", email = "me@promplate.dev" }]
-dependencies = ["promplate~=0.3.4", "python-box~=7.1.1"]
+dependencies = ["promplate~=0.3.4", "python-box>=7.1.1,<7.3.0"]
 requires-python = ">=3.10"
 license = { text = "MIT" }
 readme = "README.md"
