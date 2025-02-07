@@ -11,7 +11,7 @@ readme = "README.md"
 distribution = true
 version = { source = "file", path = "promplate_recipes/version.py" }
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = ["black~=24.3.0", "isort~=5.13.2", "ruff~=0.3.5"]
 
 [tool.pdm.scripts]
