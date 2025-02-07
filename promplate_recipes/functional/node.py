@@ -1,14 +1,14 @@
 from inspect import isgenerator
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar
 
-from promplate.chain.node import Context, Interruptable, resolve
+from promplate.chain.node import Context, Interruptible, resolve
 
 from ._common import CallableWrapper
 
 Function = TypeVar("Function", bound=Callable[[Context], Any])
 
 
-class SimpleNode(CallableWrapper[Function], Interruptable):
+class SimpleNode(CallableWrapper[Function], Interruptible):
     def __init__(self, function):
         super().__init__(function)
         self.callbacks = []

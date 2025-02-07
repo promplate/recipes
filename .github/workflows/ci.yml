@@ -25,6 +25,12 @@ jobs:
       - name: Check typing
         run: pyright
 
+  typos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crate-ci/typos@master
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +49,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: [check, build]
+    needs: [check, typos, build]
     permissions:
       id-token: write
     if: github.event_name != 'pull_request'
