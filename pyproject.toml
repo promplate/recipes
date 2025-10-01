@@ -12,7 +12,7 @@ distribution = true
 version = { source = "file", path = "promplate_recipes/version.py" }
 
 [dependency-groups]
-dev = ["black~=25.1.0", "isort~=6.0.1", "ruff~=0.12.7"]
+dev = ["black~=25.1.0", "isort>=6.0.1,<6.2.0", "ruff~=0.12.7"]
 
 [tool.pdm.scripts]
 fmt = { composite = ["ruff check --fix --exit-zero", "isort .", "black ."] }
