@@ -42,7 +42,7 @@ jobs:
       - name: Build
         run: uv build
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dist
           path: dist
